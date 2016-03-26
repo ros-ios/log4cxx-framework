@@ -1,0 +1,24 @@
+language: generic
+os: osx
+before_install:
+  - brew update
+  - brew outdated xctool || brew upgrade xctool
+  - rvm install ruby-2.2.0
+  - gem install cocoapods --no-document
+  - gem install xcpretty --no-document
+  - gem install xcpretty-travis-formatter --no-document
+script:
+  - FORMATTER=| xcpretty -f `xcpretty-travis-formatter`
+  - bash ./build.sh
+before_deploy:
+  - tar cfz log4cxx.framework.tar.gz log4cxx.framework
+  - ls
+deploy:
+  provider: releases
+  api_key:
+    secure: Nuv9Q1Nk0Yjad/aTWa6sb8tYxkrHxvupqdp6T9zizNlyTuyR3/mVfQHF/7tE99UwHIo+b53i/0hbREZ6psN8lCh6FOSEblhSFqT/JcAjMQSkyuWsBeMWIvChGvHOyqQQFYdNoPah4JjFTJzbxVKi1blxjVHKB08uSm5Q1qMdiJbS2rB/Fpo5V8t3RVNXWsb3uObl/hzPTdQ8uM6dqFHPsZgNMtE7X6c3Wwc0DJGJ8Ry1mvpD0xE61182fAyflBZeHO8LhH3mqqNNtFaLqcdrO5CHO7Qz15/YFBzkc++GfI7380ebfu+Tu8zP0XG7PbKK7ESyVnU5x9M14HrON8D/wfwk6vy82LZzbjYNo4MyQKlqmZ1qqkSzmhiexExTejzDZvtzEjjcccn/2m4A3UdvCZQ95xADMjhD5+PrXvpDTdl20yP+zpxg+ueAS1SiO5/hrk4QlDWytkZ9Yn0WeqyBM5NoMqfdpxuJTAChHpm5cIU0NpFk+FD9sukEWQs28nqCmXsav59/TNBPqcVtOZjXRF4Rp3vGfIb6sumpWrlmT3bbh2/V1T8SMpZytdfMVhNkJO9L6i0jupe6TEEkEQKNNNeUYt8HWHyHX/1vXiuwUacxCHlMVkR3v071s5SdmmHHKZwi9MR9cChO2cKFUQ4lgm1cmTNTFXNiQdvw6OSQ8Z0=
+  file: log4cxx.framework.tar.gz
+  skip_cleanup: true
+  on:
+    repo: ros-ios/boost-framework
+    tags: true
